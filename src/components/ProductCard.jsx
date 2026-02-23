@@ -1,6 +1,8 @@
-import React from 'react';
+import { use } from 'react';
+import { CartContext } from '../contexts/CartContext';
 
-const ProductCard = ({ product, setCartList }) => {
+const ProductCard = ({ product }) => {
+  const { dispatch } = use(CartContext);
   return (
     <div className="card bg-base-100 shadow-xl">
       <figure className="bg-base-200 p-6">
@@ -25,7 +27,7 @@ const ProductCard = ({ product, setCartList }) => {
         <div className="card-actions justify-end">
           <button
             className="btn btn-primary btn-sm"
-            onClick={() => setCartList((pre) => [...pre, product])}
+            onClick={() => dispatch({ type: 'ADD_TO_CART', payload: product })}
           >
             Add to cart
           </button>
