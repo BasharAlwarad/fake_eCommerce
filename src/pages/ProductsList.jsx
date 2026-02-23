@@ -1,9 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import axios from 'axios';
+
+import { CartContext } from '../contexts/CartContext';
 
 import ProductCard from '../components/ProductCard';
 
-const ProductsList = ({ setCartList }) => {
+const ProductsList = () => {
+  const { setCartList } = use(CartContext);
+
   const [productsList, setProductsList] = useState([]);
 
   useEffect(() => {
