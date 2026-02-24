@@ -1,5 +1,9 @@
 import { Link } from 'react-router';
 
+// NOTE: This is a PRESENTATIONAL component (also called "dumb" component)
+// It does NOT fetch any data on render.
+// Instead, it receives data from its parent via props (cartList)
+// and just displays it. This is a common React pattern!
 const Nav = ({ cartList }) => {
   return (
     <div className="navbar bg-base-100 shadow-sm">

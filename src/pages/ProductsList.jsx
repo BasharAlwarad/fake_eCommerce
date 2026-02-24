@@ -4,17 +4,67 @@ import axios from 'axios';
 import ProductCard from '../components/ProductCard';
 
 const ProductsList = ({ setCartList }) => {
+  // State to store the products after we fetch them
   const [productsList, setProductsList] = useState([]);
 
+  // State to track if data is currently loading
+  const [isLoading, setIsLoading] = useState(true);
+
+  // State to track any errors that happen during fetch
+  const [error, setError] = useState(null);
+
+  // ===== FETCH ON RENDER PATTERN =====
+  // useEffect hook with empty dependency array []
+  // This means: "Run this code ONCE when the component first renders"
   useEffect(() => {
+    // Create an async function to fetch the data
     const fetchProducts = async () => {
-      const { data } = await axios.get('https://fakestoreapi.com/products');
-      setProductsList(data);
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        // Make the API call
+        const { data } = await axios.get('https://fakestoreapi.com/products');
+
+        // Save the data to state
+        setProductsList(data);
+        setIsLoading(false);
+      } catch (err) {
+        // If something goes wrong, save the error
+        setError(err.message);
+        setIsLoading(false);
+      }
     };
 
+    // Call the async function
     fetchProducts();
+
+    // Empty dependency array = only run when component mounts
   }, []);
 
+  // Show loading message while fetching
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-base-200 px-6 py-10">
+        <div className="mx-auto max-w-6xl text-center">
+          <p className="text-lg">Loading products...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error message if fetch failed
+  if (error) {
+    return (
+      <div className="min-h-screen bg-base-200 px-6 py-10">
+        <div className="mx-auto max-w-6xl text-center">
+          <p className="text-lg text-red-600">Error: {error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show products once data is loaded
   return (
     <div className="min-h-screen bg-base-200 px-6 py-10">
       <div className="mx-auto max-w-6xl">

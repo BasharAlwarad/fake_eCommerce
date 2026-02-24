@@ -1,6 +1,13 @@
 import React from 'react';
 
 const ProductCard = ({ product, setCartList }) => {
+  // Handle adding product to cart
+  const handleAddToCart = () => {
+    // Update the cartList state by spreading the previous items
+    // and adding the new product to the end
+    setCartList((prevCart) => [...prevCart, product]);
+  };
+
   return (
     <div className="card bg-base-100 shadow-xl">
       <figure className="bg-base-200 p-6">
@@ -23,10 +30,7 @@ const ProductCard = ({ product, setCartList }) => {
           <div className="badge badge-ghost">{product.category}</div>
         </div>
         <div className="card-actions justify-end">
-          <button
-            className="btn btn-primary btn-sm"
-            onClick={() => setCartList((pre) => [...pre, product])}
-          >
+          <button className="btn btn-primary btn-sm" onClick={handleAddToCart}>
             Add to cart
           </button>
         </div>
