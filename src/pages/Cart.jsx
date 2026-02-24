@@ -1,13 +1,14 @@
 import ProductCard from '../components/ProductCard';
 
+/**
+ * PRESENTATIONAL COMPONENT - No data fetching
+ *
+ * Cart data comes from App.jsx state (cartList prop),
+ * not from an API. This is state lifting - state lives
+ * in the parent and is passed down to children.
+ */
 const Cart = ({ cartList, setCartList }) => {
-  // NOTE: The Cart component does NOT fetch data on render.
-  // Why? Because the cart data is managed by the parent App.jsx component
-  // and passed down as a prop. This is called "lifting state up".
-  //
-  // The cart items come from state that's already in memory (App.jsx),
-  // so we don't need to fetch them from an API.
-
+  // Show empty state if no items in cart
   if (cartList.length === 0) {
     return (
       <div className="min-h-screen bg-base-200 px-6 py-10">
@@ -18,6 +19,7 @@ const Cart = ({ cartList, setCartList }) => {
     );
   }
 
+  // Show cart items if cart has products
   return (
     <div className="min-h-screen bg-base-200 px-6 py-10">
       <div className="mx-auto max-w-6xl">

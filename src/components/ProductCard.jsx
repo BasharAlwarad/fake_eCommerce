@@ -1,10 +1,14 @@
 import React from 'react';
 
+/**
+ * PRESENTATIONAL COMPONENT - No data fetching
+ *
+ * Just displays product info and handles the click to add to cart.
+ * The actual cart state management is in App.jsx.
+ */
 const ProductCard = ({ product, setCartList }) => {
-  // Handle adding product to cart
   const handleAddToCart = () => {
-    // Update the cartList state by spreading the previous items
-    // and adding the new product to the end
+    // Add this product to the cart by spreading previous items
     setCartList((prevCart) => [...prevCart, product]);
   };
 

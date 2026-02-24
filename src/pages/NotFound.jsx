@@ -1,6 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router';
 
+/**
+ * PRESENTATIONAL COMPONENT
+ * Simple error page - no data fetching
+ */
 const NotFound = () => {
   const navigate = useNavigate();
 
