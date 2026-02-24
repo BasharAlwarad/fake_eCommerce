@@ -1,5 +1,12 @@
 import { useState, Suspense } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router';
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+  RouterProvider,
+  Outlet,
+  useOutletContext,
+} from 'react-router';
 
 import { createResource } from './utils/resourceCache';
 import ProductsList from './pages/ProductsList';
@@ -7,49 +14,57 @@ import NotFound from './pages/NotFound';
 import Cart from './pages/Cart';
 import Nav from './components/Nav';
 
-function App() {
-  // ===== RENDER AS YOU FETCH PATTERN =====
-  // Start fetching data IMMEDIATELY when App loads
-  // This is NOT in useEffect - it happens at the top level
-  // Data fetching STARTS BEFORE rendering happens
-  const productsResource = createResource('https://fakestoreapi.com/products');
+// ===== RENDER AS YOU FETCH PATTERN =====
+// Start fetching data IMMEDIATELY when the app loads
+// This is NOT in useEffect - it happens at the top level
+// Data fetching STARTS BEFORE rendering happens
+const productsResource = createResource('https://fakestoreapi.com/products');
 
-  // This state holds all items in the shopping cart
-  // It's stored here in App.jsx so all child components can access/modify it
+// Root layout component - holds cart state and renders Nav + page content
+function RootLayout() {
   const [cartList, setCartList] = useState([]);
 
   return (
-    <BrowserRouter>
+    <>
       <Nav cartList={cartList} />
-      <Routes>
-        {/* 
-          Suspense catches when ProductsList tries to read data that's not ready yet.
-          While loading, it shows the fallback (Loading products...)
-          Once data is ready, ProductsList renders with the data
-        */}
-        <Route
-          path="/"
-          element={
-            <Suspense
-              fallback={<LoadingScreen message="Loading products..." />}
-            >
-              <ProductsList
-                productsResource={productsResource}
-                setCartList={setCartList}
-              />
-            </Suspense>
-          }
-        />
-        {/* Cart page does NOT fetch - it uses cartList from App state */}
-        <Route
-          path="/cart"
-          element={<Cart cartList={cartList} setCartList={setCartList} />}
-        />
-        {/* Fallback for any route that doesn't match */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
+      <Outlet context={{ cartList, setCartList }} />
+    </>
   );
+}
+
+// Wrapper for ProductsList page to access outlet context
+function ProductsListPage() {
+  const { setCartList } = useOutletContext();
+  return (
+    <Suspense fallback={<LoadingScreen message="Loading products..." />}>
+      <ProductsList
+        productsResource={productsResource}
+        setCartList={setCartList}
+      />
+    </Suspense>
+  );
+}
+
+// Wrapper for Cart page to access outlet context
+function CartPage() {
+  const { cartList, setCartList } = useOutletContext();
+  return <Cart cartList={cartList} setCartList={setCartList} />;
+}
+
+// Define routes using createRoutesFromElements
+const routes = createRoutesFromElements(
+  <Route element={<RootLayout />}>
+    <Route path="/" element={<ProductsListPage />} />
+    <Route path="/cart" element={<CartPage />} />
+    <Route path="*" element={<NotFound />} />
+  </Route>
+);
+
+// Create the router with createBrowserRouter
+const router = createBrowserRouter(routes);
+
+function App() {
+  return <RouterProvider router={router} />;
 }
 
 // Simple loading screen component
