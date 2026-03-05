@@ -4,8 +4,11 @@ import { BrowserRouter, Routes, Route } from 'react-router';
 import ProductsList from './pages/ProductsList';
 import NotFound from './pages/NotFound';
 import Cart from './pages/Cart';
+import Signup from './pages/Signup';
 
 import Nav from './components/Nav';
+import Login from './pages/Login';
+import UserProfile from './pages/UserProfile';
 
 function App() {
   // This state holds all items in the shopping cart
@@ -18,6 +21,9 @@ function App() {
       <Routes>
         {/* ProductsList page fetches products ON RENDER using useEffect */}
         <Route path="/" element={<ProductsList setCartList={setCartList} />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/userProfile" element={<UserProfile />} />
 
         {/* Cart page does NOT fetch - it uses cartList from App state */}
         <Route

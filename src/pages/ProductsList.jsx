@@ -3,7 +3,7 @@ import axios from 'axios';
 
 import ProductCard from '../components/ProductCard';
 
-const ProductsList = ({ setCartList }) => {
+export default function ProductList({ setCartList }) {
   // State to store the products after we fetch them
   const [productsList, setProductsList] = useState([]);
 
@@ -25,7 +25,7 @@ const ProductsList = ({ setCartList }) => {
 
         // Make the API call
         const { data } = await axios.get('https://fakestoreapi.com/products');
-
+        console.log(data);
         // Save the data to state
         setProductsList(data);
         setIsLoading(false);
@@ -86,6 +86,4 @@ const ProductsList = ({ setCartList }) => {
       </div>
     </div>
   );
-};
-
-export default ProductsList;
+}
